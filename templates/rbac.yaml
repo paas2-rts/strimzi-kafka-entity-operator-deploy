@@ -1,0 +1,106 @@
+{{/*
+RBAC rules used to create the operator (cluster)role based on the scope
+*/}}
+
+{{- define "entity-operator.rbacRules" }}
+rules:
+- apiGroups:
+  - "kafka.strimzi.io"
+  resources:
+    # The entity operator runs the KafkaTopic assembly operator, which needs to access and manage KafkaTopic resources
+  - kafkatopics
+  - kafkatopics/status
+    # The entity operator runs the KafkaUser assembly operator, which needs to access and manage KafkaUser resources
+  - kafkausers
+  - kafkausers/status
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - patch
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+    # The entity operator needs to be able to create events
+  - create
+- apiGroups:
+  - ""
+  resources:
+    # The entity operator user-operator needs to access and manage secrets to store generated credentials
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - patch
+  - update
+{{- end }}
+
+{{/*
+Cluster scoped RBAC.
+*/}}
+{{- if .Values.watchAnyNamespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "strimzi.fullname" . }}
+  labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: entity-operator-role
+{{- template "entity-operator.rbacRules" $ }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "strimzi.fullname" . }}-cluster-role-binding
+  labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: entity-operator-role-binding
+roleRef:
+  kind: ClusterRole
+  name: {{ template "strimzi.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "strimzi.fullname" . }}
+    namespace: {{ .Release.Namespace }}
+{{- else }}
+{{/*
+Namespaced scoped RBAC.
+*/}}
+{{- range .Values.watchNamespaces }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "strimzi.fullname" $ }}-{{ . }}
+  namespace: {{ . }}
+  labels: {{- include "strimzi.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: entity-operator-role
+{{- template "entity-operator.rbacRules" $ }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "strimzi.fullname" $ }}--{{ . }}-role-binding
+  labels: {{- include "strimzi.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: entity-operator-role-binding
+roleRef:
+  kind: Role
+  name: {{ template "strimzi.fullname" $ }}-{{ . }}
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "strimzi.fullname" $ }}
+    namespace: {{ $.Release.Namespace }}
+{{- end}}
+{{- end}}
+
+
+
