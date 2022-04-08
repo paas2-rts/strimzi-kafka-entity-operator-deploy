@@ -27,7 +27,7 @@ resources:
     cpu: 100m
 
 livenessProbe:
-  enabled: false
+  enabled: true
   initialDelaySeconds: 60
   timeoutSeconds: 5
   failureThreshold: 3
@@ -35,11 +35,11 @@ livenessProbe:
   successThreshold: 1
 
 readinessProbe:
-  enabled: false
+  enabled: true
   initialDelaySeconds: 60
   failureThreshold: 6
   timeoutSeconds: 5
   periodSeconds: 10
   successThreshold: 1
 
-logLevel: "DEBUG"
+logLevel: "INFO"
