@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "strimzi.fullname" . }}-topic
+  name: {{ template "strimzi.fullname" . }}-user
   labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
-    app.kubernetes.io/component: topic-operator
+    app.kubernetes.io/component: user-operator
   annotations:
   {{- range $key, $value := .Values.annotations }}
     {{ $key | quote }}: {{ $value | quote }}
@@ -12,11 +12,11 @@ spec:
   replicas: 1
   selector:
     matchLabels: {{- include "strimzi.labels.matchLabels" . | nindent 6 }}
-      app.kubernetes.io/component: topic-operator
+      app.kubernetes.io/component: user-operator
   template:
     metadata:
       labels: {{- include "strimzi.labels.standard" . | nindent 8 }}
-        app.kubernetes.io/component: topic-operator
+        app.kubernetes.io/component: user-operator
     spec:
       serviceAccountName:  {{ template "strimzi.fullname" . }}
       {{- if .Values.imagePullSecrets }}
@@ -42,24 +42,16 @@ spec:
           image: "{{ .Values.image }}:{{ .Values.imageTag }}"
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           args:
-          - /opt/strimzi/bin/topic_operator_run.sh
+          - /opt/strimzi/bin/user_operator_run.sh
           env:
             - name: STRIMZI_RESOURCE_LABELS
               value: {{  (join "," .Values.resourceSelectorLabels)}}
             - name: STRIMZI_KAFKA_BOOTSTRAP_SERVERS
               value: {{  (join "," .Values.kafka.bootstrapServers)}}
-            - name: STRIMZI_ZOOKEEPER_CONNECT
-              value: {{  (join "," .Values.zookeeper.servers)}}
-            - name: STRIMZI_ZOOKEEPER_SESSION_TIMEOUT_MS
-              value: "{{ default 18000 .Values.priorityClassName }}"
             - name: STRIMZI_FULL_RECONCILIATION_INTERVAL_MS
               value: "{{ default 120000 .Values.fullReconciliationIntervalMs }}"
-            - name: STRIMZI_TOPIC_METADATA_MAX_ATTEMPTS
-              value: "{{ default 6 .Values.topicMetaDataMaxAttempts }}"
             - name: STRIMZI_LOG_LEVEL
               value: {{ default "INFO" .Values.logLevel }}
-            - name: STRIMZI_TLS_ENABLED
-              value: "{{ .Values.kafka.tls.enabled }}"
             - name: STRIMZI_NAMESPACE
               {{- if .Values.watchAnyNamespace }}
               value: "*"

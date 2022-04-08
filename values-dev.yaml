@@ -18,6 +18,9 @@ zookeeper:
   servers:
     - kafka-zookeeper.kafka.svc.cluster.local:2181
 
+resourceSelectorLabels:
+  - strimzi.io/cluster=kafka
+
 resources:
   limits:
     memory: 256Mi
