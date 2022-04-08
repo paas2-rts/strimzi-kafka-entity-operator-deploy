@@ -5,7 +5,7 @@ imagePullPolicy: IfNotPresent
 
 # If you set `watchNamespaces` to the same value as ``.Release.Namespace` (e.g. `helm ... --namespace $NAMESPACE`),
 # the chart will fail because duplicate RoleBindings will be attempted to be created in the same namespace
-watchNamespaces: [kafka,kafka-connect]
+watchNamespaces: [kafka, kafka-connect]
 watchAnyNamespace: false
 
 kafka:
@@ -19,7 +19,7 @@ zookeeper:
     - kafka-zookeeper.kafka.svc.cluster.local:2181
 
 resourceSelectorLabels:
-  - strimzi.io/cluster=kafka
+  - cluster=kafka
 
 resources:
   limits:
