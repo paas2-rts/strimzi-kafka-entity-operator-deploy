@@ -22,3 +22,5 @@ spec:
         - name: ncat
           image: "subfuzion/netcat:latest"
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+          command:
+           - bash
