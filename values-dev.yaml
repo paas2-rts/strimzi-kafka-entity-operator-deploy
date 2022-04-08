@@ -10,7 +10,7 @@ watchAnyNamespace: false
 
 kafka:
   bootstrapServers:
-    - kafka-1-headless.kafka.svc.cluster.local:9095
+    - kafka-1-headless.kafka.svc.cluster.local:9092
   tls:
     enabled: false
 
