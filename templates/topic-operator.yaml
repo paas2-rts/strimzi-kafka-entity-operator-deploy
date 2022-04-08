@@ -18,7 +18,7 @@ spec:
       labels: {{- include "strimzi.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: topic-operator
     spec:
-      serviceAccountName: strimzi-topic-operator
+      serviceAccountName:  {{ template "strimzi.fullname" . }}
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml .Values.imagePullSecrets | nindent 8 }}
