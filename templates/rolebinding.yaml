@@ -8,7 +8,7 @@ kind: ClusterRoleBinding
 kind: RoleBinding
 {{- end }}
 metadata:
-  name: {{ template "strimzi.fullname" $ }}-delegation
+  name: {{ template "strimzi.fullname" $ }}-{{ $root.Release.Namespace }}-role-binding
   namespace: {{ . }}
   labels: {{- include "strimzi.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: entity-operator-role-binding
