@@ -24,3 +24,19 @@ resources:
   requests:
     memory: 96Mi
     cpu: 100m
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  timeoutSeconds: 5
+  failureThreshold: 3
+  periodSeconds: 10
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  failureThreshold: 6
+  timeoutSeconds: 5
+  periodSeconds: 10
+  successThreshold: 1

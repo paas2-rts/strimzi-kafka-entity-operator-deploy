@@ -74,18 +74,18 @@ spec:
                   fieldPath: metadata.namespace
               {{- end }}
               {{- end }}
-          livenessProbe:
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe: {{ toYaml (omit .Values.livenessProbe "enabled") | nindent 12 }}
             httpGet:
               path: /healthy
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 30
-          readinessProbe:
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe: {{ toYaml (omit .Values.readinessProbe "enabled") | nindent 12 }}
             httpGet:
               path: /ready
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 30
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
   strategy:
