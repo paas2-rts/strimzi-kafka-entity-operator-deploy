@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "strimzi.fullname" . }}-ncat
+  labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: ncat
+  annotations:
+  {{- range $key, $value := .Values.annotations }}
+    {{ $key | quote }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: ncat
+          image: "subfuzion/netcat:latest"
+          imagePullPolicy: "{{ .Values.imagePullPolicy }}"
