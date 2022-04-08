@@ -8,18 +8,18 @@ kind: ClusterRoleBinding
 kind: RoleBinding
 {{- end }}
 metadata:
-  name: {{ template "strimzi.fullname" . }}-delegation
+  name: {{ template "strimzi.fullname" $ }}-delegation
   namespace: {{ . }}
-  labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
+  labels: {{- include "strimzi.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: entity-operator-role-binding
 # The Entity Operator cluster role must be bound to the cluster operator service account so that it can delegate the cluster role to the Entity Operator.
 # This must be done to avoid escalating privileges which would be blocked by Kubernetes.
 subjects:
   - kind: ServiceAccount
-    name: {{ template "strimzi.fullname" . }}
+    name: {{ template "strimzi.fullname" $ }}
     namespace: {{ $root.Release.Namespace }}
 roleRef:
   kind: ClusterRole
-  name: {{ template "strimzi.fullname" . }}
+  name: {{ template "strimzi.fullname" $ }}
   apiGroup: rbac.authorization.k8s.io
 {{- end }}
