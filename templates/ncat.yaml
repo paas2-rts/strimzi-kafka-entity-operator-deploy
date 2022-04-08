@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: ncat
-          image: "subfuzion/netcat:latest"
+          image: "chilcano/netcat:latest"
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           command:
-           - sh
+           - bash
