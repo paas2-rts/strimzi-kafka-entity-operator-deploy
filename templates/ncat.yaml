@@ -10,7 +10,13 @@ metadata:
   {{- end }}
 spec:
   replicas: 1
+  selector:
+    matchLabels: {{- include "strimzi.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ncat
   template:
+    metadata:
+      labels: {{- include "strimzi.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: ncat
     spec:
       containers:
         - name: ncat
