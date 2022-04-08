@@ -89,6 +89,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ template "strimzi.fullname" $ }}--{{ . }}-role-binding
+  namespace: {{ . }}
   labels: {{- include "strimzi.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: entity-operator-role-binding
 roleRef:
