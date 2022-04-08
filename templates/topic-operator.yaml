@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       labels: {{- include "strimzi.labels.standard" . | nindent 8 }}
-        app.kubernetes.io/component: kafka
+        app.kubernetes.io/component: topic-operator
     spec:
       serviceAccountName: strimzi-topic-operator
       {{- if .Values.imagePullSecrets }}

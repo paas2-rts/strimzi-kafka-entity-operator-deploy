@@ -1,7 +1,7 @@
 apiVersion: v2
 appVersion: "0.1.0"
 description: "Strimzi: Apache Kafka Topic And User provisioning on Kubernetes"
-name: strimzi-kafka-entity-operator
+name: kafka-entity-operator
 version: 0.1.0
 icon: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/documentation/logo/strimzi_logo.png
 keywords:
