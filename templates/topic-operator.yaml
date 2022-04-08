@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "strimzi.fullname" . }}
+  labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: topic-operator
+  annotations:
+  {{- range $key, $value := .Values.annotations }}
+    {{ $key | quote }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "strimzi.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: topic-operator
+  template:
+    metadata:
+      labels: {{- include "strimzi.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: kafka
+    spec:
+      serviceAccountName: strimzi-topic-operator
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      containers:
+        - name: strimzi-topic-operator
+          image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+          imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+          args:
+          - /opt/strimzi/bin/topic_operator_run.sh
+          env:
+            - name: STRIMZI_RESOURCE_LABELS
+              value: "strimzi.io/cluster=my-cluster"
+            - name: STRIMZI_KAFKA_BOOTSTRAP_SERVERS
+              value: {{  (join "," .Values.kafka.bootstrapServers)}}
+            - name: STRIMZI_ZOOKEEPER_CONNECT
+              value: {{  (join "," .Values.zookeeper.servers)}}
+            - name: STRIMZI_ZOOKEEPER_SESSION_TIMEOUT_MS
+              value: "{{ default 18000 .Values.priorityClassName }}"
+            - name: STRIMZI_FULL_RECONCILIATION_INTERVAL_MS
+              value: "{{ default 120000 .Values.fullReconciliationIntervalMs }}"
+            - name: STRIMZI_TOPIC_METADATA_MAX_ATTEMPTS
+              value: "{{ default 6 .Values.topicMetaDataMaxAttempts }}"
+            - name: STRIMZI_LOG_LEVEL
+              value: {{ default "INFO" .Values.logLevel }}
+            - name: STRIMZI_TLS_ENABLED
+              value: "{{ .Values.kafka.tls.enabled }}"
+            - name: STRIMZI_NAMESPACE
+              {{- if .Values.watchAnyNamespace }}
+              value: "*"
+              {{- else }}
+              {{- if .Values.watchNamespaces -}}
+              {{- $ns := .Values.watchNamespaces -}}
+              {{- $ns := append $ns .Release.Namespace }}
+              value: "{{ join "," $ns }}"
+              {{- else }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+              {{- end }}
+              {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+  strategy:
+    type: Recreate

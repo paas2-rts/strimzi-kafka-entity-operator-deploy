@@ -1,0 +1,26 @@
+image: quay.io/strimzi/operator
+imageTag: 0.28.0
+imagePullPolicy: IfNotPresent
+
+# If you set `watchNamespaces` to the same value as ``.Release.Namespace` (e.g. `helm ... --namespace $NAMESPACE`),
+# the chart will fail because duplicate RoleBindings will be attempted to be created in the same namespace
+watchNamespaces: [kafka,kafka-connect]
+watchAnyNamespace: false
+
+kafka:
+  bootstrapServers:
+    - kafka-1-headless.kafka.svc.cluster.local:9095
+  tls:
+    enabled: false
+
+zookeeper:
+  servers:
+    - kafka-zookeeper.kafka.svc.cluster.local:2181
+
+resources:
+  limits:
+    memory: 96Mi
+    cpu: 100m
+  requests:
+    memory: 96Mi
+    cpu: 100m
