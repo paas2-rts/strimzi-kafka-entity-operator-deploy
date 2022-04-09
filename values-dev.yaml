@@ -60,7 +60,10 @@ customLogging: |+
   rootLogger.appenderRef.console.ref = STDOUT
   rootLogger.additivity = false
 
-  loggers= io.strimzi.operator.topic.Session,io.strimzi.operator.topic.K8sTopicWatcher,io.vertx.core.impl.BlockedThreadChecker
+  loggers= io.strimzi.operator.topic.Session,io.strimzi.operator.topic.K8sTopicWatcher,io.vertx.core.impl.BlockedThreadChecker,io.strimzi.operator.topic.TopicOperator
+
+  logger.io.strimzi.operator.topic.TopicOperator.name = io.strimzi.operator.topic.TopicOperator
+  logger.io.strimzi.operator.topic.TopicOperator.level = DEBUG
 
   logger.io.strimzi.operator.topic.Session.name = io.strimzi.operator.topic.Session
   logger.io.strimzi.operator.topic.Session.level = DEBUG
