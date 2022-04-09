@@ -60,8 +60,11 @@ customLogging: |+
   rootLogger.appenderRef.console.ref = STDOUT
   rootLogger.additivity = false
 
+  loggers= io.strimzi.operator.topic.Session,io.strimzi.operator.topic.K8sTopicWatcher
+
   logger.io.strimzi.operator.topic.Session.name = io.strimzi.operator.topic.Session
   logger.io.strimzi.operator.topic.Session.level = DEBUG
+  logger.rolling.additivity = false
   logger.io.strimzi.operator.topic.K8sTopicWatcher.name = io.strimzi.operator.topic.K8sTopicWatcher
   logger.io.strimzi.operator.topic.K8sTopicWatcher.level = DEBUG
 
