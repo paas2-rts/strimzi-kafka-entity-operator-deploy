@@ -66,7 +66,7 @@ spec:
               {{- else }}
               {{- if .Values.watchNamespaces -}}
               {{- $ns := .Values.watchNamespaces -}}
-              {{- $ns := append $ns .Release.Namespace }}
+              # {{- $ns := append $ns .Release.Namespace }}
               value: "{{ join "," $ns }}"
               {{- else }}
               valueFrom:
