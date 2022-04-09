@@ -61,17 +61,7 @@ spec:
             - name: STRIMZI_TLS_ENABLED
               value: "{{ .Values.kafka.tls.enabled }}"
             - name: STRIMZI_NAMESPACE
-              {{- if .Values.watchAnyNamespace }}
-              value: "*"
-              {{- else }}
-              {{- if .Values.watchNamespaces }}
-              value: "{{ join "," .Values.watchNamespaces }}"
-              {{- else }}
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-              {{- end }}
-              {{- end }}
+              value: "{{ .Values.watchNamespace }}"
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe: {{ toYaml (omit .Values.livenessProbe "enabled") | nindent 12 }}
             httpGet:

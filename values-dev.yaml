@@ -3,10 +3,7 @@ image: quay.io/strimzi/operator
 imageTag: 0.28.0
 imagePullPolicy: IfNotPresent
 
-# If you set `watchNamespaces` to the same value as ``.Release.Namespace` (e.g. `helm ... --namespace $NAMESPACE`),
-# the chart will fail because duplicate RoleBindings will be attempted to be created in the same namespace
-watchNamespaces: [kafka]
-watchAnyNamespace: false
+watchNamespace: kafka
 
 kafka:
   bootstrapServers:
