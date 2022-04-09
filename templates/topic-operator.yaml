@@ -64,10 +64,8 @@ spec:
               {{- if .Values.watchAnyNamespace }}
               value: "*"
               {{- else }}
-              {{- if .Values.watchNamespaces -}}
-              {{- $ns := .Values.watchNamespaces -}}
-              # {{- $ns := append $ns .Release.Namespace }}
-              value: "{{ join "," $ns }}"
+              {{- if .Values.watchNamespaces }}
+              value: "{{ join "," .Values.watchNamespaces }}"
               {{- else }}
               valueFrom:
                 fieldRef:
