@@ -19,7 +19,7 @@ zookeeper:
     - kafka-zookeeper.kafka.svc.cluster.local:2181
 
 resourceSelectorLabels:
-  - cluster=kafka
+  - cluster=rts-kafka
 
 resources:
   limits:
