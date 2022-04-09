@@ -55,16 +55,18 @@ customLogging: |+
   appender.console.layout.type = PatternLayout
   appender.console.layout.pattern = %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
 
-  rootLogger.level = INFO
+  rootLogger.level = ERROR
   rootLogger.appenderRefs = stdout
   rootLogger.appenderRef.console.ref = STDOUT
   rootLogger.additivity = false
 
-  loggers= io.strimzi.operator.topic.Session,io.strimzi.operator.topic.K8sTopicWatcher
+  loggers= io.strimzi.operator.topic.Session,io.strimzi.operator.topic.K8sTopicWatcher,io.vertx.core.impl.BlockedThreadChecker
 
   logger.io.strimzi.operator.topic.Session.name = io.strimzi.operator.topic.Session
   logger.io.strimzi.operator.topic.Session.level = DEBUG
-  logger.rolling.additivity = false
   logger.io.strimzi.operator.topic.K8sTopicWatcher.name = io.strimzi.operator.topic.K8sTopicWatcher
   logger.io.strimzi.operator.topic.K8sTopicWatcher.level = DEBUG
+
+  logger.io.vertx.core.impl.BlockedThreadChecker.name = io.vertx.core.impl.BlockedThreadChecker
+  logger.io.vertx.core.impl.BlockedThreadChecker.level = ERROR
 
