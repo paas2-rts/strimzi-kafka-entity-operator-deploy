@@ -46,3 +46,20 @@ readinessProbe:
   successThreshold: 1
 
 logLevel: "INFO"
+
+customLogging: |+
+  appender.console.type = Console
+  appender.console.name = STDOUT
+  appender.console.layout.type = PatternLayout
+  appender.console.layout.pattern = %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+  rootLogger.level = INFO
+  rootLogger.appenderRefs = stdout
+  rootLogger.appenderRef.console.ref = STDOUT
+  rootLogger.additivity = false
+
+  logger.io.strimzi.operator.topic.Session.name = io.strimzi.operator.topic.Session
+  logger.io.strimzi.operator.topic.Session.level = DEBUG
+  logger.io.strimzi.operator.topic.K8sTopicWatcher.name = io.strimzi.operator.topic.K8sTopicWatcher
+  logger.io.strimzi.operator.topic.K8sTopicWatcher.level = DEBUG
+

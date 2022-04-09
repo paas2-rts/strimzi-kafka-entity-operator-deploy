@@ -88,5 +88,16 @@ spec:
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+          {{- if .Values.customLogging }}
+          volumeMounts:
+            - name: log4j2-config
+              mountPath: /opt/topic-operator/custom-config
+          {{- end}}
+  {{- if .Values.customLogging }}
+  volumes:
+    - name: log4j2-config
+      configMap:
+        name: {{ template "strimzi.fullname" . }}-log4j2-configmap
+  {{- end}}
   strategy:
     type: Recreate

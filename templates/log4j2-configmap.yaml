@@ -1,0 +1,9 @@
+{{- if .Values.customLogging }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "strimzi.fullname" . }}-log4j2-configmap
+  labels: {{- include "strimzi.labels.standard" . | nindent 4 }}
+data:
+  log4j2.properties: {{- toYaml .Values.customLogging | indent 2 }}
+{{- end}}
